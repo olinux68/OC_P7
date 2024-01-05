@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <!-- Définition du jeu de caractères et de la vue adaptative pour les appareils mobiles -->
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+
+    <!-- Importation des icônes de Font Awesome pour un usage dans la page -->
+    <script
+      src="https://kit.fontawesome.com/99f8905dd1.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Importation des polices de caractères depuis Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope&display=swap"
+      rel="stylesheet"
+    >
+
+    <!-- Lien vers la feuille de style CSS externe pour styliser la page -->
+    <link rel="stylesheet" href="/css/style.css" >
+
+    <!-- Titre de la page, affiché dans l'onglet du navigateur -->
+    <title>Les petits plats</title>
+  </head>
+
+  <body>
+    <!-- SECTION ENTÊTE -->
+    <header>
+      <div class="header_container">
+        <!-- Conteneur du logo -->
+        <div class="logo_container">
+          <img
+            src="/assets/images/logo.svg"
+            alt="Logo de l'entreprise Les Petits Plats"
+            class=""
+          >
+        </div>
+
+        <!-- Titre principal de la page -->
+        <h1 class="header_title">
+          CHERCHEZ PARMI PLUS DE 1500 RECETTES DU QUOTIDIEN, SIMPLES ET
+          DÉLICIEUSES
+        </h1>
+
+        <!-- Barre de navigation et de recherche -->
+        <nav class="search_nav">
+          <input
+            id="recipeSearch"
+            name="recipeSearch"
+            class="research"
+            type="search"
+            placeholder="Rechercher une recette, un ingrédient, ..."
+          >
+
+          <div class="button_container">
+            <button type="submit" aria-label="Rechercher" title="Rechercher">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <span class="visually-hidden">Rechercher</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- SECTION PRINCIPALE -->
+    <main>
+      <!-- SECTION DES FILTRES ACTIFS -->
+
+      <!-- SECTION DES FILTRES -->
+      <section class="filter_section">
+        <div class="filters_container">
+          <!-- Filtre pour les ingrédients -->
+          <div class="filter">
+            <button value="ingredients" class="btn_filter">
+              Ingrédients
+              <i class="fa-solid fa-chevron-down down"></i>
+            </button>
+            <div class="filter_expanded hidden">
+              <div class="filter_search_container">
+                <input
+                  type="search"
+                  id="ingredientFilter"
+                  name="ingredientSearch"
+                  class="research_filter"
+                >
+                <button
+                  class="fa-solid fa-magnifying-glass submit_filter"
+                ></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtre pour les appareils -->
+          <div class="filter">
+            <button value="appliances" class="btn_filter">
+              Appareils
+              <i class="fa-solid fa-chevron-down down"></i>
+            </button>
+            <div class="filter_expanded hidden">
+              <div class="filter_search_container">
+                <input
+                  type="search"
+                  id="applianceFilter"
+                  name="applianceSearch"
+                  class="research_filter"
+                >
+                <button
+                  class="fa-solid fa-magnifying-glass submit_filter"
+                ></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtre pour les ustensiles -->
+          <div class="filter">
+            <button value="ustensils" class="btn_filter">
+              Ustensiles
+              <i class="fa-solid fa-chevron-down down"></i>
+            </button>
+            <div class="filter_expanded hidden">
+              <div class="filter_search_container">
+                <input
+                  type="search"
+                  id="ustensilFilter"
+                  name="ustensilSearch"
+                  class="research_filter"
+                >
+                <button
+                  class="fa-solid fa-magnifying-glass submit_filter"
+                ></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Endroit pour afficher le nombre total de recettes -->
+        <h2 class="total_recipes">1500</h2>
+      </section>
+
+      <!-- Section pour afficher les filtres actifs -->
+      <div class="filters_active_section hidden"></div>
+
+      <!-- Section pour afficher les recettes -->
+      <div class="recipes_section"></div>
+    </main>
+
+    <!-- Importation du script JavaScript principal de la page -->
+    <script type="module" src="./js/index.js"></script>
+  </body>
+</html>
