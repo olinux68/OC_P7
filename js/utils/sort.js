@@ -50,39 +50,52 @@ function normalizeString(str) {
 
 // Fonction pour rechercher des recettes correspondant aux filtres actifs
 export function searchRecipe(activeFilterCategory) {
-  // Normalisation des critères de recherche
-  const normalizedKeyword = normalizeString(activeFilterCategory.keyword);
-  const normalizedIngredients = activeFilterCategory.ingredients.map(normalizeString);
-  const normalizedUstensils = activeFilterCategory.ustensils.map(normalizeString);
-  const normalizedAppliances = activeFilterCategory.appliances.map(normalizeString);
+  var matchingRecipes = [];
+  var recipe, ingredientsMatch, ustensilsMatch, appliancesMatch, keywordMatch;
 
-  // Filtrer les recettes en fonction des critères de recherche
-  return recipes.filter(recipe => {
-    // Vérification de la correspondance des ingrédients, ustensiles, appareils et mots-clés
-    const ingredientsMatch = normalizedIngredients.every(ingredientFilt =>
-      recipe.ingredients.some(recipeIngredient =>
-        normalizeString(recipeIngredient.ingredient) === ingredientFilt
-      )
-    );
+  var normalizedKeyword = normalizeString(activeFilterCategory.keyword);
+  var normalizedIngredients = activeFilterCategory.ingredients.map(normalizeString);
+  var normalizedUstensils = activeFilterCategory.ustensils.map(normalizeString);
+  var normalizedAppliances = activeFilterCategory.appliances.map(normalizeString);
 
-    const ustensilsMatch = normalizedUstensils.every(ustensilFilt =>
-      recipe.ustensils.some(ustensil => normalizeString(ustensil) === ustensilFilt)
-    );
+  for (var i = 0; i < recipes.length; i++) {
+    recipe = recipes[i];
+    ingredientsMatch = true;
+    ustensilsMatch = true;
+    appliancesMatch = true;
+    keywordMatch = !normalizedKeyword;
 
-    const appliancesMatch = normalizedAppliances.every(applianceFilt =>
-      normalizeString(recipe.appliance) === applianceFilt
-    );
-
-    const keywordMatch = !normalizedKeyword ||
-      normalizeString(recipe.name).includes(normalizedKeyword) ||
-      normalizeString(recipe.description).includes(normalizedKeyword) ||
-      recipe.ingredients.some(recipeIngredient =>
-        normalizeString(recipeIngredient.ingredient).includes(normalizedKeyword)
+    for (var j = 0; j < normalizedIngredients.length && ingredientsMatch; j++) {
+      ingredientsMatch = recipe.ingredients.some(recipeIngredient =>
+        normalizeString(recipeIngredient.ingredient) === normalizedIngredients[j]
       );
+    }
 
-    // Retourner vrai si tous les critères correspondent
-    return ingredientsMatch && ustensilsMatch && appliancesMatch && keywordMatch;
-  });
+    for (var j = 0; j < normalizedUstensils.length && ustensilsMatch; j++) {
+      ustensilsMatch = recipe.ustensils.some(ustensil =>
+        normalizeString(ustensil) === normalizedUstensils[j]
+      );
+    }
+
+    for (var j = 0; j < normalizedAppliances.length && appliancesMatch; j++) {
+      appliancesMatch = normalizeString(recipe.appliance) === normalizedAppliances[j];
+    }
+
+    if (normalizedKeyword) {
+      keywordMatch = 
+        normalizeString(recipe.name).includes(normalizedKeyword) ||
+        normalizeString(recipe.description).includes(normalizedKeyword) ||
+        recipe.ingredients.some(recipeIngredient =>
+          normalizeString(recipeIngredient.ingredient).includes(normalizedKeyword)
+        );
+    }
+
+    if (ingredientsMatch && ustensilsMatch && appliancesMatch && keywordMatch) {
+      matchingRecipes.push(recipe);
+    }
+  }
+
+  return matchingRecipes;
 }
 
 // Fonction pour afficher les filtres en fonction de la catégorie de recette
