@@ -49,45 +49,79 @@ function normalizeString(str) {
 }
 
 // Fonction pour rechercher des recettes correspondant aux filtres actifs
-export function searchRecipe(activeFilterCategory) {
+export  searchRecipe(activeFilterCategory) {
   var matchingRecipes = [];
-  var recipe, ingredientsMatch, ustensilsMatch, appliancesMatch, keywordMatch;
+  var recipe;
 
   var normalizedKeyword = normalizeString(activeFilterCategory.keyword);
-  var normalizedIngredients = activeFilterCategory.ingredients.map(normalizeString);
-  var normalizedUstensils = activeFilterCategory.ustensils.map(normalizeString);
-  var normalizedAppliances = activeFilterCategory.appliances.map(normalizeString);
+
+  var normalizedIngredients = [];
+  for (var i = 0; i < activeFilterCategory.ingredients.length; i++) {
+    normalizedIngredients.push(normalizeString(activeFilterCategory.ingredients[i]));
+  }
+
+  var normalizedUstensils = [];
+  for (var i = 0; i < activeFilterCategory.ustensils.length; i++) {
+    normalizedUstensils.push(normalizeString(activeFilterCategory.ustensils[i]));
+  }
+
+  var normalizedAppliances = [];
+  for (var i = 0; i < activeFilterCategory.appliances.length; i++) {
+    normalizedAppliances.push(normalizeString(activeFilterCategory.appliances[i]));
+  }
 
   for (var i = 0; i < recipes.length; i++) {
     recipe = recipes[i];
-    ingredientsMatch = true;
-    ustensilsMatch = true;
-    appliancesMatch = true;
-    keywordMatch = !normalizedKeyword;
-
-    for (var j = 0; j < normalizedIngredients.length && ingredientsMatch; j++) {
-      ingredientsMatch = recipe.ingredients.some(recipeIngredient =>
-        normalizeString(recipeIngredient.ingredient) === normalizedIngredients[j]
-      );
+    var ingredientsMatch = true;
+    for (var j = 0; j < normalizedIngredients.length; j++) {
+      var ingredientFound = false;
+      for (var k = 0; k < recipe.ingredients.length; k++) {
+        if (normalizeString(recipe.ingredients[k].ingredient) === normalizedIngredients[j]) {
+          ingredientFound = true;
+          break;
+        }
+      }
+      if (!ingredientFound) {
+        ingredientsMatch = false;
+        break;
+      }
     }
 
-    for (var j = 0; j < normalizedUstensils.length && ustensilsMatch; j++) {
-      ustensilsMatch = recipe.ustensils.some(ustensil =>
-        normalizeString(ustensil) === normalizedUstensils[j]
-      );
+    var ustensilsMatch = true;
+    for (var j = 0; j < normalizedUstensils.length; j++) {
+      var ustensilFound = false;
+      for (var k = 0; k < recipe.ustensils.length; k++) {
+        if (normalizeString(recipe.ustensils[k]) === normalizedUstensils[j]) {
+          ustensilFound = true;
+          break;
+        }
+      }
+      if (!ustensilFound) {
+        ustensilsMatch = false;
+        break;
+      }
     }
 
-    for (var j = 0; j < normalizedAppliances.length && appliancesMatch; j++) {
-      appliancesMatch = normalizeString(recipe.appliance) === normalizedAppliances[j];
+    var appliancesMatch = true;
+    for (var j = 0; j < normalizedAppliances.length; j++) {
+      if (normalizeString(recipe.appliance) !== normalizedAppliances[j]) {
+        appliancesMatch = false;
+        break;
+      }
     }
 
+    var keywordMatch = !normalizedKeyword;
     if (normalizedKeyword) {
-      keywordMatch = 
-        normalizeString(recipe.name).includes(normalizedKeyword) ||
-        normalizeString(recipe.description).includes(normalizedKeyword) ||
-        recipe.ingredients.some(recipeIngredient =>
-          normalizeString(recipeIngredient.ingredient).includes(normalizedKeyword)
-        );
+      keywordMatch = stringIncludes(normalizeString(recipe.name), normalizedKeyword) ||
+        stringIncludes(normalizeString(recipe.description), normalizedKeyword);
+      if (!keywordMatch) {
+        for (var j = 0; j < recipe.ingredients.length; j++) {
+          if (stringIncludes(normalizeString(recipe.ingredients[j].ingredient), normalizedKeyword)) {
+            keywordMatch = true;
+            break;
+          }
+        }
+      }
     }
 
     if (ingredientsMatch && ustensilsMatch && appliancesMatch && keywordMatch) {
